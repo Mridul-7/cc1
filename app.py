@@ -1,26 +1,19 @@
-from flask import Flask, render_template, request
-
-app = Flask(__name)
-
-# Replace this with a secure way to store your usernames and passwords
-users = {
-    'user1': 'password1',
-    'user2': 'password2',
-}
-
-@app.route('/')
-def login_page():
-    return render_template('login.html')
-
-@app.route('/login', methods=['POST'])
+from flask import Flask, render_template, request, redirect, url_for
+app = Flask(__name__)
+ 
+@app.route('/', methods=['GET', 'POST'])
 def login():
-    username = request.form['username']
-    password = request.form['password']
-
-    if username in users and users[username] == password:
-        return 'Login Successfully'
-    else:
-        return 'Login failed due to incorrect username and password'
-
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != 'admin' or request.form['password'] != 'password':
+            error = 'Invalid Credentials. Please try again.'
+        else:
+            return redirect(url_for('success'))
+    return render_template('login.html', error=error)
+ 
+@app.route('/success')
+def success():
+    return "Login Successful!"
+ 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=80)
