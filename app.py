@@ -1,19 +1,21 @@
-from flask import Flask, render_template, request, redirect, url_for
-app = Flask(__name__)
- 
-@app.route('/', methods=['GET', 'POST'])
+from flask import Flask, request, render_template
+
+app = Flask(__name)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/login', methods=['POST'])
 def login():
-    error = None
-    if request.method == 'POST':
-        if request.form['username'] != 'admin' or request.form['password'] != 'password':
-            error = 'Invalid Credentials. Please try again.'
-        else:
-            return redirect(url_for('success'))
-    return render_template('login.html', error=error)
- 
-@app.route('/success')
-def success():
-    return "Login Successful!"
- 
+    username = request.form['username']
+    password = request.form['password']
+
+    # You should replace this logic with your own user validation logic.
+    if username == 'demo' and password == 'password':
+        return 'Login Successfully'
+    else:
+        return 'Login failed due to incorrect username and password'
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run(debug=True)
